@@ -1,0 +1,22 @@
+[Unit]
+Description=ElasticSearch search engine
+Documentation=https://www.elasticsearch.org/guide/en/elasticsearch/guide/current/index.html
+
+[Service]
+# ExecStart=/usr/libexec/elasticsearch
+ExecStart=@LAUNCHER@
+ProtectHome=yes
+ProtectSystem=yes
+SuccessExitStatus=143
+# See MAX_OPEN_FILES in sysconfig
+LimitNOFILE=65535
+# See MAX_LOCKED_MEMORY in sysconfig, use "infinity" when MAX_LOCKED_MEMORY=unlimited and using bootstrap.mlockall: true
+#LimitMEMLOCK=infinity
+# Shutdown delay in seconds, before process is tried to be killed with KILL (if configured)
+TimeoutStopSec=20
+User=@USER@
+Group=@USER@
+
+[Install]
+WantedBy=multi-user.target
+

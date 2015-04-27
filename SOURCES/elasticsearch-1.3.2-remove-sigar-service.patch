@@ -1,0 +1,47 @@
+--- src/main/java/org/elasticsearch/monitor/MonitorModule.java	2014-08-13 16:27:50.000000000 +0200
++++ src/main/java/org/elasticsearch/monitor/MonitorModule.java-gil	2014-09-06 20:17:45.009937288 +0200
+@@ -28,22 +28,17 @@
+ import org.elasticsearch.monitor.fs.FsProbe;
+ import org.elasticsearch.monitor.fs.FsService;
+ import org.elasticsearch.monitor.fs.JmxFsProbe;
+-import org.elasticsearch.monitor.fs.SigarFsProbe;
+ import org.elasticsearch.monitor.jvm.JvmMonitorService;
+ import org.elasticsearch.monitor.jvm.JvmService;
+ import org.elasticsearch.monitor.network.JmxNetworkProbe;
+ import org.elasticsearch.monitor.network.NetworkProbe;
+ import org.elasticsearch.monitor.network.NetworkService;
+-import org.elasticsearch.monitor.network.SigarNetworkProbe;
+ import org.elasticsearch.monitor.os.JmxOsProbe;
+ import org.elasticsearch.monitor.os.OsProbe;
+ import org.elasticsearch.monitor.os.OsService;
+-import org.elasticsearch.monitor.os.SigarOsProbe;
+ import org.elasticsearch.monitor.process.JmxProcessProbe;
+ import org.elasticsearch.monitor.process.ProcessProbe;
+ import org.elasticsearch.monitor.process.ProcessService;
+-import org.elasticsearch.monitor.process.SigarProcessProbe;
+-import org.elasticsearch.monitor.sigar.SigarService;
+ 
+ import java.util.Map;
+ 
+@@ -65,21 +60,6 @@
+     @Override
+     protected void configure() {
+         boolean sigarLoaded = false;
+-        try {
+-            settings.getClassLoader().loadClass("org.hyperic.sigar.Sigar");
+-            SigarService sigarService = new SigarService(settings);
+-            if (sigarService.sigarAvailable()) {
+-                bind(SigarService.class).toInstance(sigarService);
+-                bind(ProcessProbe.class).to(SigarProcessProbe.class).asEagerSingleton();
+-                bind(OsProbe.class).to(SigarOsProbe.class).asEagerSingleton();
+-                bind(NetworkProbe.class).to(SigarNetworkProbe.class).asEagerSingleton();
+-                bind(FsProbe.class).to(SigarFsProbe.class).asEagerSingleton();
+-                sigarLoaded = true;
+-            }
+-        } catch (Throwable e) {
+-            // no sigar
+-            Loggers.getLogger(SigarService.class).trace("failed to load sigar", e);
+-        }
+         if (!sigarLoaded) {
+             // bind non sigar implementations
+             bind(ProcessProbe.class).to(JmxProcessProbe.class).asEagerSingleton();

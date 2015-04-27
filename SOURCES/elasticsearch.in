@@ -1,0 +1,81 @@
+#!/bin/bash
+#
+# elasticsearch script
+# JPackage Project <http://www.jpackage.org/>
+
+# Source functions library
+_prefer_jre="true"
+. /usr/share/java-utils/java-functions
+
+# Source system prefs
+if [ -f /etc/java/elasticsearch.conf ] ; then
+  . /etc/java/elasticsearch.conf
+fi
+
+# Source user prefs
+if [ -f $HOME/.elasticsearchrc ] ; then
+  . $HOME/.elasticsearchrc
+fi
+
+ES=@NAME@
+VLIB=@VLIB@
+if [ `whoami` = "$ES" ] ; then
+  BASE=$VLIB/$ES
+else
+  BASE=$XDG_CONFIG_HOME
+  if  [ "$BASE" = "" ] ; then 
+    BASE=$HOME/.config/$ES
+  else
+   BASE=$BASE/$ES
+  fi
+fi
+
+
+
+ES_HOME=$BASE
+LOG_DIR=$BASE/logs
+DATA_DIR=$BASE/data
+WORK_DIR=$BASE/work
+CONF_DIR=$BASE/conf
+CONF_FILE=$CONF_DIR/$ES.yml
+LOG_CONF_FILE=$CONF_DIR/logging.yml
+
+mkdir -p $BASE
+mkdir -p $LOG_DIR
+mkdir -p $DATA_DIR
+mkdir -p $WORK_DIR
+mkdir -p $CONF_DIR
+
+# copy base config files if not already created
+if [ ! `whoami` = "$ES" ] ; then
+  if [ ! -f $CONF_FILE ] ; then
+    cp $VLIB/$ES/conf/$ES.yml $CONF_FILE
+  fi
+  if [ ! -f $LOG_CONF_FILE ] ; then
+    cp $VLIB/$ES/conf/logging.yml $LOG_CONF_FILE
+  fi
+fi
+
+# Configuration
+MAIN_CLASS=org.elasticsearch.bootstrap.Elasticsearch
+if [ -f $CONF_FILE ] ; then 
+  FLAGS="-Des.default.config=$CONF_FILE "
+else
+  FLAGS=""
+fi
+FLAGS=$FLAGS" -Des.default.path.home=$ES_HOME -Des.default.path.logs=$LOG_DIR -Des.default.path.data=$DATA_DIR -Des.default.path.work=$WORK_DIR -Des.default.path.conf=$CONF_DIR"
+
+BASE_OPTIONS=""
+BASE_JARS="@NAME@ netty3-3.9.3 lucene-sandbox hppc jackson-core jackson-dataformat-cbor jackson-dataformat-smile jackson-dataformat-yaml snakeyaml guava compress-lzf t-digest commons-cli joda-time antlr3-runtime apache-commons-lang3 lucene-core lucene-highlighter lucene-join lucene-memory lucene-queries lucene-queryparser lucene-spatial lucene-suggest joda-convert java-base64"
+
+# Set parameters
+set_jvm
+set_classpath $BASE_JARS
+#not working, using FLAGS directly rather
+#set_flags $BASE_FLAGS
+#same here, but it is currently unused
+#set_options $BASE_OPTIONS
+
+
+# Let's start
+run  "$@"

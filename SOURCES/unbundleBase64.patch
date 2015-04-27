@@ -1,0 +1,43 @@
+--- src/main/java/org/elasticsearch/action/search/type/TransportSearchHelper.java
++++ src/main/java/org/elasticsearch/action/search/type/TransportSearchHelper.java
+@@ -29,7 +29,7 @@
+ import org.elasticsearch.action.search.SearchScrollRequest;
+ import org.elasticsearch.action.search.SearchType;
+ import org.elasticsearch.cluster.routing.ShardRouting;
+-import org.elasticsearch.common.Base64;
++import net.iharder.Base64;
+ import org.elasticsearch.common.Nullable;
+ import org.elasticsearch.common.Strings;
+ import org.elasticsearch.common.collect.Tuple;
+--- src/main/java/org/elasticsearch/common/RandomBasedUUIDGenerator.java
++++ src/main/java/org/elasticsearch/common/RandomBasedUUIDGenerator.java
+@@ -23,6 +23,7 @@
+ 
+ import java.io.IOException;
+ import java.util.Random;
++import net.iharder.Base64;
+ 
+ class RandomBasedUUIDGenerator implements UUIDGenerator {
+ 
+--- src/main/java/org/elasticsearch/common/TimeBasedUUIDGenerator.java
++++ src/main/java/org/elasticsearch/common/TimeBasedUUIDGenerator.java
+@@ -25,6 +25,7 @@
+ import java.util.Random;
+ import java.util.concurrent.atomic.AtomicInteger;
+ import java.util.concurrent.atomic.AtomicLong;
++import net.iharder.Base64;
+ 
+ /** These are essentially flake ids (http://boundary.com/blog/2012/01/12/flake-a-decentralized-k-ordered-unique-id-generator-in-erlang) but
+  *  we use 6 (not 8) bytes for timestamp, and use 3 (not 2) bytes for sequence number. */
+--- src/main/java/org/elasticsearch/index/mapper/core/BinaryFieldMapper.java
++++ src/main/java/org/elasticsearch/index/mapper/core/BinaryFieldMapper.java
+@@ -27,7 +27,7 @@
+ import org.apache.lucene.util.BytesRef;
+ import org.elasticsearch.ElasticsearchException;
+ import org.elasticsearch.ElasticsearchParseException;
+-import org.elasticsearch.common.Base64;
++import net.iharder.Base64;
+ import org.elasticsearch.common.Nullable;
+ import org.elasticsearch.common.Strings;
+ import org.elasticsearch.common.bytes.BytesArray;
+

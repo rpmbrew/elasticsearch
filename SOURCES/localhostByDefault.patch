@@ -1,0 +1,18 @@
+--- config/elasticsearch.yml
++++ config/elasticsearch (copy).yml
+@@ -211,6 +211,14 @@
+ #
+ #network.host: 192.168.0.1
+ 
++# use only localhost by default
++network.host: "127.0.0.1"
++
++# If you want only http transport to listen on localhost
++# comment out 'network.host: "127.0.0.1"' anduncomment the following line instead.
++#http.host: "127.0.0.1"
++
++
+ # Set a custom port for the node to node communication (9300 by default):
+ #
+ #transport.tcp.port: 9300
+
